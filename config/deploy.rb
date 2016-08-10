@@ -6,6 +6,8 @@ set :repository, 'git@github.com:gpinkham/canvas-lms.git'
 set :scm, 'git'
 
 # Default branch is :master
+set :branch, ENV['BRANCH'] || "stable"
+
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app
