@@ -12,6 +12,13 @@ group :development do
   gem 'spring', '>= 1.3.0'
   gem 'spring-commands-rspec', '1.0.2'
 
+  # MV Deployments
+  gem 'capistrano', '3.5'
+  gem 'capistrano-rails', '~> 1.1'
+  gem 'capistrano-rvm'
+  gem 'capistrano-bundler', '~> 1.1.2'
+  gem 'capistrano-passenger'
+
   # Option to DISABLE_RUBY_DEBUGGING is helpful IDE-based debugging.
   # The ruby debug gems conflict with the IDE-based debugger gem.
   # Set this option in your dev environment to disable.
