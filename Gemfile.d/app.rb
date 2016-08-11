@@ -86,6 +86,8 @@ gem 'rdoc', '3.12'
 gem 'ratom-nokogiri', '0.10.4', require: false
 gem 'rdiscount', '1.6.8', require: false
 gem 'ritex', '1.0.1', require: false
+gem 'yard', '0.8.7.6'
+gem 'yard-appendix', '>=0.1.8'
 
 gem 'rotp', '1.6.1', require: false
 gem 'net-ldap', '0.10.1', require: false
