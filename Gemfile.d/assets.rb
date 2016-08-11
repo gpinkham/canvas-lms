@@ -6,4 +6,7 @@ group :assets do
       gem 'posix-spawn', '0.3.8', require: false
       gem 'yajl-ruby', '1.1.0', require: false
   gem 'fontcustom', '~> 1.3.3', require: false
+  gem 'coffee-script', '2.3.0'
+  gem 'coffee-script-source', '1.6.2' #pinned so everyone's compiled output matches
+
 end

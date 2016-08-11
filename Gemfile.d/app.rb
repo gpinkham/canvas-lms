@@ -74,6 +74,8 @@ gem 'nokogiri', '1.6.6.2.20150813143452', require: false, github: 'codekitchen/n
 # oauth gem, with rails3 fixes rolled in
 gem 'oauth-instructure', '0.4.10', require: false
 gem 'oauth2', '1.0.0', require: false
+# MV Auth
+#gem 'omniauth_mv', git: 'git@github.com:MediVector/omniauth_mv.git'
 gem 'parallel', '1.4.1', require: false
   gem 'ruby-progressbar', '1.7.5', require: false #used to show progress of S3Uploader
 gem 'rack-mini-profiler', '0.9.2', require: false
