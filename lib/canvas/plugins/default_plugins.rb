@@ -49,6 +49,16 @@ Canvas::Plugin.register('microsoft', nil,
   settings_partial: 'plugins/microsoft_settings',
   encrypted_settings: [:application_secret]
 )
+Canvas::Plugin.register('mv_oauth', nil,
+                        name: 'MediVector',
+                        description: -> { t :description, 'MediVector Login' },
+                        website: 'https://medivector.com',
+                        author: 'MediVector',
+                        author_website: 'http://www.medivector.com',
+                        version: '1.0.0',
+                        settings_partial: 'plugins/mv_settings',
+                        encrypted_settings: [:client_secret]
+)
 Canvas::Plugin.register('diigo', nil, {
   :name => lambda{ t :name, 'Diigo' },
   :description => lambda{ t :description, 'Diigo integration' },

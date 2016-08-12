@@ -62,6 +62,8 @@ class AccountAuthorizationConfig < ActiveRecord::Base
       LinkedIn
     when 'openid_connect'
       OpenIDConnect
+    when 'mv_oauth'
+      MvOauth
     else
       super
     end
@@ -88,7 +90,7 @@ class AccountAuthorizationConfig < ActiveRecord::Base
   has_many :pseudonyms, foreign_key: :authentication_provider_id
   acts_as_list scope: { account: self, workflow_state: [nil, 'active'] }
 
-  VALID_AUTH_TYPES = %w[canvas cas clever facebook github google ldap linkedin microsoft openid_connect saml twitter].freeze
+  VALID_AUTH_TYPES = %w[canvas cas clever facebook github google ldap linkedin microsoft mv_oauth openid_connect saml twitter].freeze
   validates_inclusion_of :auth_type, in: VALID_AUTH_TYPES, message: "invalid auth_type, must be one of #{VALID_AUTH_TYPES.join(',')}"
   validates_presence_of :account_id
 
