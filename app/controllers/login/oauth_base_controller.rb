@@ -61,7 +61,8 @@ class Login::OauthBaseController < ApplicationController
     false
   end
 
-  def find_pseudonym(unique_ids)
+  def find_pseudonym(unique_ids, additional_info = {})
+
     if unique_ids.nil?
       unknown_user_url = @domain_root_account.unknown_user_url.presence || login_url
       logger.warn "Received OAuth2 login with no unique_id"
@@ -74,11 +75,12 @@ class Login::OauthBaseController < ApplicationController
     pseudonym = nil
     unique_ids = Array(unique_ids)
     unique_ids.any? do |unique_id|
-      pseudonym = @domain_root_account.pseudonyms.for_auth_configuration(unique_id, @aac)
+      pseudonym = @aac.account.pseudonyms.for_auth_configuration(unique_id, @aac)
     end
-    pseudonym ||= @aac.provision_user(unique_ids.first) if !unique_ids.empty? && @aac.jit_provisioning?
+    pseudonym ||= @aac.provision_user(unique_ids.first, additional_info) if !unique_ids.empty? && @aac.jit_provisioning?
 
     if pseudonym
+      process_group_updates(pseudonym, additional_info)
       # Successful login and we have a user
       @domain_root_account.pseudonym_sessions.create!(pseudonym, false)
       session[:login_aac] = @aac.global_id
@@ -89,6 +91,29 @@ class Login::OauthBaseController < ApplicationController
       logger.warn "Received OAuth2 login for unknown user: #{unique_ids.inspect}, redirecting to: #{unknown_user_url}."
       flash[:delegated_message] = t "Canvas doesn't have an account for user: %{user}", :user => unique_ids.first
       redirect_to unknown_user_url
+    end
+  end
+
+  def process_group_updates(pseudonym, additional_info)
+    puts additional_info.inspect
+    puts '-------------'
+
+    #####
+    # this needs to handle the ALL study
+    #####
+    study_roles = additional_info[:study_roles]
+    study_roles.each_pair do |study,roles|
+      # if study.upcase == 'ALL'  # skipping for now
+      courses = Course.where("course_code = '#{study}'")
+      courses.each do |c|
+        roles.each do |r|
+          e = c.enrollments.where(user_id: pseudonym.user.id, type: r)
+          if e.nil?
+            enrollment_options = {enrollment_type: r, limit_privileges_to_course_section: false, enrollment_state: 'active'}
+            c.enroll_user(pseudonym.user, r, enrollment_options)
+          end
+        end
+      end
     end
   end
 end

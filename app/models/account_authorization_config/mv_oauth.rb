@@ -43,8 +43,17 @@ class AccountAuthorizationConfig::MvOauth < AccountAuthorizationConfig::Oauth2
   end
 
   def unique_id(token)
-    token.options[:mode] = :query
-    token.get('users/me').parsed[login_attribute].to_s
+    # token.options[:mode] = :query
+   raw_info(token)[login_attribute].to_s
+  end
+
+  def additional_info(token)
+      {
+          :email => raw_info(token)['email'],
+          :name => raw_info(token)['name'],
+          :provider => 'mv_oauth',
+          :study_roles => raw_info(token)['study_roles']
+      }
   end
 
   def self.login_attributes
@@ -57,6 +66,10 @@ class AccountAuthorizationConfig::MvOauth < AccountAuthorizationConfig::Oauth2
   end
 
   protected
+
+  def raw_info(token)
+    @raw_info ||= token.get('/users/me.json').parsed
+  end
 
   def client_options
     {

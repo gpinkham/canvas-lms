@@ -148,4 +148,30 @@ describe AccountAuthorizationConfig do
       expect(aac3.reload.position).to eq(2)
     end
   end
+
+  describe "provision" do
+    let!(:aac){ account.authentication_providers.create!(auth_type: 'mv_oauth') }
+
+    it "creates a new pseudonym and user with name" do
+      name = 'Gary Pinkham'
+      email = 'gpinkham@medivector.com'
+      pseudonym = aac.provision_user(email, {name: name})
+      expect(pseudonym).to_not be_nil
+      expect(pseudonym.user).to_not be_nil
+      expect(pseudonym.unique_id).to eq(email)
+      expect(pseudonym.user.name).to eq(email)
+      expect(pseudonym.user.sortable_name).to eq(name)
+    end
+
+    it "creates a new pseudonym and user without name" do
+      email = 'gpinkham@medivector.com'
+      pseudonym = aac.provision_user(email)
+      expect(pseudonym).to_not be_nil
+      expect(pseudonym.user).to_not be_nil
+      expect(pseudonym.unique_id).to eq(email)
+      expect(pseudonym.user.name).to eq(email)
+      expect(pseudonym.user.sortable_name).to eq(email)
+    end
+
+  end
 end

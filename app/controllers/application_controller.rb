@@ -100,7 +100,10 @@ class ApplicationController < ActionController::Base
   #       ENV.FOO_BAR #> [1,2,3]
   #
   def js_env(hash = {})
-    return {} unless request.format.html?
+    unless request.format.html?
+      @js_env = {}
+      return @js_env
+    end
     # set some defaults
     unless @js_env
       editor_css = view_context.stylesheet_path(css_url_for('what_gets_loaded_inside_the_tinymce_editor'))

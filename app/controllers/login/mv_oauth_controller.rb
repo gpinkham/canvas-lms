@@ -16,22 +16,6 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-class Login::MvOauthController < Login::Oauth2Controller
-
-  def create
-    return unless validate_request
-
-    @aac = AccountAuthorizationConfig.find(jwt['aac_id'])
-    raise ActiveRecord::RecordNotFound unless @aac.is_a?(AccountAuthorizationConfig::Oauth2)
-
-    unique_id = nil
-    return unless timeout_protection do
-      token = @aac.get_token(params[:code], oauth2_login_callback_url)
-      unique_id = @aac.unique_id(token)
-    end
-
-    find_pseudonym(unique_id)
-  end
-
-
+module Login
+  MvOauthController = Oauth2Controller
 end

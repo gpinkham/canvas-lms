@@ -149,7 +149,9 @@ class Pseudonym < ActiveRecord::Base
 
   def self.for_auth_configuration(unique_id, aac)
     auth_id = aac.try(:auth_provider_filter)
-    active.by_unique_id(unique_id).where(authentication_provider_id: auth_id).first
+    foo = active.by_unique_id(unique_id).where(authentication_provider_id: auth_id).first
+    puts foo
+    foo
   end
 
   def set_password_changed

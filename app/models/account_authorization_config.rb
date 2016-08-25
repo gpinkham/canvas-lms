@@ -154,10 +154,11 @@ class AccountAuthorizationConfig < ActiveRecord::Base
 
   def self.serialization_excludes; [:auth_crypted_password, :auth_password_salt]; end
 
-  def provision_user(unique_id)
+  def provision_user(unique_id, additional_info = {})
     User.transaction(requires_new: true) do
       pseudonym = account.pseudonyms.build
       pseudonym.user = User.create!(name: unique_id, workflow_state: 'registered')
+      pseudonym.user.update_attribute(:sortable_name, additional_info[:name]) unless additional_info[:name].nil?
       pseudonym.authentication_provider = self
       pseudonym.unique_id = unique_id
       pseudonym.save!

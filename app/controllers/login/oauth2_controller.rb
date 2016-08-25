@@ -32,12 +32,15 @@ class Login::Oauth2Controller < Login::OauthBaseController
     raise ActiveRecord::RecordNotFound unless @aac.is_a?(AccountAuthorizationConfig::Oauth2)
 
     unique_id = nil
+    additional_info = nil
     return unless timeout_protection do
+      puts "\n\n\n================FOO==========\n\n\n\n\n"
       token = @aac.get_token(params[:code], oauth2_login_callback_url)
       unique_id = @aac.unique_id(token)
+      additional_info = @aac.additional_info(token) #if !@aac.respond_to?('additional_info')
     end
 
-    find_pseudonym(unique_id)
+    find_pseudonym(unique_id, additional_info)
   end
 
   protected
